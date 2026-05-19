@@ -38,4 +38,183 @@
         <tag>随笔</tag>
       </tags>
   </entry>
+  <entry>
+    <title>读 RAG-MCP 项目（0）：项目总览与学习路线</title>
+    <url>/2026/05/19/%E8%AF%BB-RAG-MCP-%E9%A1%B9%E7%9B%AE-0-%E9%A1%B9%E7%9B%AE%E6%80%BB%E8%A7%88%E4%B8%8E%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/</url>
+    <content><![CDATA[<blockquote>
+<p>这是「读 RAG-MCP 项目」系列的第 0 篇。<br>原项目：<a href="https://github.com/jerry-ai-dev/MODULAR-RAG-MCP-SERVER">jerry-ai-dev&#x2F;MODULAR-RAG-MCP-SERVER</a><br>本系列目标：通过完整复现一个<strong>工业级 RAG 项目</strong>，把 RAG 面试中的高频考点（混合检索、Rerank、Ragas 评估、MCP 协议）一次性吃透。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="一、为什么是这个项目"><a href="#一、为什么是这个项目" class="headerlink" title="一、为什么是这个项目"></a>一、为什么是这个项目</h2><blockquote>
+<p>TODO：在这里写你<strong>为什么</strong>选这个项目，比如：</p>
+<ul>
+<li>在哪里发现的（B 站？公众号？GitHub Trending？）</li>
+<li>第一眼吸引你的点是什么</li>
+<li>准备投入多少时间</li>
+</ul>
+</blockquote>
+<p>我看完 README 后觉得它有三个不同于其他 RAG demo 的特点：</p>
+<ol>
+<li><strong>不是玩具</strong>：完整覆盖了 Ingestion → Retrieval → Generation → Evaluation 全链路，不像很多教程只做检索那一步</li>
+<li><strong>MCP 协议加成</strong>：当下大模型工具调用最热的协议，可直接被 Claude Desktop &#x2F; Cursor 等客户端调用</li>
+<li><strong>工程化思路</strong>：用 DEV_SPEC 驱动开发的方式，本身就是一种值得学习的方法论</li>
+</ol>
+<hr>
+<h2 id="二、项目能做什么（一句话版）"><a href="#二、项目能做什么（一句话版）" class="headerlink" title="二、项目能做什么（一句话版）"></a>二、项目能做什么（一句话版）</h2><blockquote>
+<p>一个<strong>可插拔的本地知识库问答服务</strong>：把 PDF 等文档喂给它，它能用 LLM 帮你回答关于这些文档的问题，并标明引用出处；同时把自己暴露成 MCP 工具，让 Claude &#x2F; Copilot 直接调用。</p>
+</blockquote>
+<hr>
+<h2 id="三、整体架构"><a href="#三、整体架构" class="headerlink" title="三、整体架构"></a>三、整体架构</h2><p>整个系统可以拆成四块：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│                       外部入口                              │</span><br><span class="line">│   MCP Client    /   CLI 脚本    /    Streamlit Dashboard    │</span><br><span class="line">└────────────┬────────────────┬─────────────────┬─────────────┘</span><br><span class="line">             │                │                 │</span><br><span class="line">       ┌─────▼─────┐    ┌─────▼─────┐     ┌─────▼─────┐</span><br><span class="line">       │  MCP      │    │ Ingestion │     │   Query   │</span><br><span class="line">       │  Server   │    │ Pipeline  │     │   Path    │</span><br><span class="line">       └─────┬─────┘    └─────┬─────┘     └─────┬─────┘</span><br><span class="line">             │                │                 │</span><br><span class="line">             └────────────┬───┴─────────────────┘</span><br><span class="line">                          │</span><br><span class="line">                  ┌───────▼────────┐</span><br><span class="line">                  │   本地存储     │</span><br><span class="line">                  │  ChromaDB +    │</span><br><span class="line">                  │   BM25 索引    │</span><br><span class="line">                  └────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据如何进入系统（Ingestion）"><a href="#数据如何进入系统（Ingestion）" class="headerlink" title="数据如何进入系统（Ingestion）"></a>数据如何进入系统（Ingestion）</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">PDF 文件 → 完整性校验 → 文档加载 → 切块 →</span><br><span class="line">        ↓</span><br><span class="line">    内容增强（ChunkRefiner + MetadataEnricher + ImageCaptioner）</span><br><span class="line">        ↓</span><br><span class="line">    编码（Dense Embedding + BM25 词频）→ 写入 ChromaDB + BM25 索引</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据如何被查询出来（Query）"><a href="#数据如何被查询出来（Query）" class="headerlink" title="数据如何被查询出来（Query）"></a>数据如何被查询出来（Query）</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">用户问题 → 同时检索（向量 + BM25）→ RRF 融合排序 → Reranker 精排</span><br><span class="line">                                                        ↓</span><br><span class="line">                                            ResponseBuilder 拼接 + 引用溯源</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、技术栈速览"><a href="#四、技术栈速览" class="headerlink" title="四、技术栈速览"></a>四、技术栈速览</h2><table>
+<thead>
+<tr>
+<th>层级</th>
+<th>选型</th>
+<th>我的初印象</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>语言</strong></td>
+<td>Python 3.10+</td>
+<td>标配</td>
+</tr>
+<tr>
+<td><strong>向量库</strong></td>
+<td>ChromaDB</td>
+<td>比 FAISS 重，但带 metadata 过滤</td>
+</tr>
+<tr>
+<td><strong>稀疏检索</strong></td>
+<td>自实现 BM25 + Jieba 分词</td>
+<td>中文场景必备</td>
+</tr>
+<tr>
+<td><strong>文本切分</strong></td>
+<td>langchain-text-splitters</td>
+<td>不重新造轮子</td>
+</tr>
+<tr>
+<td><strong>PDF 解析</strong></td>
+<td>markitdown[pdf]</td>
+<td>微软出的，能保留结构</td>
+</tr>
+<tr>
+<td><strong>MCP 协议</strong></td>
+<td>mcp 官方 SDK</td>
+<td>Anthropic 推的协议</td>
+</tr>
+<tr>
+<td><strong>Dashboard</strong></td>
+<td>Streamlit</td>
+<td>数据科学家最爱，写得快</td>
+</tr>
+<tr>
+<td><strong>评估</strong></td>
+<td>Ragas + 自定义 Evaluator</td>
+<td>业界主流</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>TODO：等学完后回来打分 —— 每项技术选型「我会不会换」、「为什么」</p>
+</blockquote>
+<hr>
+<h2 id="五、我的学习路线规划"><a href="#五、我的学习路线规划" class="headerlink" title="五、我的学习路线规划"></a>五、我的学习路线规划</h2><p>我打算按这个顺序拆解学习，每一步对应一篇笔记：</p>
+<table>
+<thead>
+<tr>
+<th>顺序</th>
+<th>主题</th>
+<th>关键问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>0</strong></td>
+<td>项目总览（本文）</td>
+<td>整体架构是什么样的</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>可插拔架构</td>
+<td>抽象接口是怎么设计的？如何一键切后端？</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>Ingestion 流程</td>
+<td>PDF 怎么变成向量的？图片怎么处理？</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>混合检索 BM25 + Dense + RRF</td>
+<td>三者各自补什么短板？融合公式怎么推</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>Rerank 精排</td>
+<td>Cross-Encoder vs LLM Rerank 的取舍</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>MCP 协议</td>
+<td>怎么写一个最小 MCP Server？</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td>Ragas 评估</td>
+<td>5 大指标各意味着什么？</td>
+</tr>
+<tr>
+<td><strong>7</strong></td>
+<td>可观测性</td>
+<td>Trace 是怎么做到全链路透明的</td>
+</tr>
+<tr>
+<td><strong>8</strong></td>
+<td>总结 + 用项目思路做自己的扩展</td>
+<td>学完之后能不能换个数据源 &#x2F; 加 Agent？</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="六、当前进度与下一步"><a href="#六、当前进度与下一步" class="headerlink" title="六、当前进度与下一步"></a>六、当前进度与下一步</h2><blockquote>
+<p>TODO：每写完一篇，回来更新这张表</p>
+</blockquote>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 0 - 项目总览（本文）</li>
+<li><input disabled="" type="checkbox"> 1 - 可插拔架构</li>
+<li><input disabled="" type="checkbox"> 2 - Ingestion 流程</li>
+<li><input disabled="" type="checkbox"> …</li>
+</ul>
+<hr>
+<h2 id="七、参考与致谢"><a href="#七、参考与致谢" class="headerlink" title="七、参考与致谢"></a>七、参考与致谢</h2><ul>
+<li>🔗 原项目：<a href="https://github.com/jerry-ai-dev/MODULAR-RAG-MCP-SERVER">jerry-ai-dev&#x2F;MODULAR-RAG-MCP-SERVER</a></li>
+<li>📖 项目作者的视频讲解（<strong>TODO：把作者的视频链接补上</strong>）</li>
+<li>📚 相关论文：<ul>
+<li>BM25：Robertson et al., <em>Okapi at TREC-3</em>, 1994</li>
+<li>RRF：Cormack et al., <em>Reciprocal Rank Fusion</em>, SIGIR 2009</li>
+<li>RAG：Lewis et al., <em>Retrieval-Augmented Generation</em>, NeurIPS 2020</li>
+</ul>
+</li>
+</ul>
+<hr>
+<blockquote>
+<p>下一篇：<a href="#">读 RAG-MCP 项目（1）：可插拔架构是怎么设计的（TODO 占位）</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>RAG</tag>
+        <tag>MCP</tag>
+        <tag>LLM</tag>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
 </search>
