@@ -20,15 +20,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"txswde.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="一些做过的小项目，记录自己的成长。      📚 RAG 智能问答系统简介：基于检索增强生成（RAG）的本地知识库问答系统，把私有文档转成向量索引，再用大模型自然语言作答。 技术栈：Python · LangChain · FAISS · OpenAI API 核心功能  📄 支持 PDF &#x2F; Markdown &#x2F; TXT 等多格式文档解析 🔍 基于向量相似度的语义检索">
+    <meta name="description" content="一些做过的小项目，记录自己的成长。      🧩 Modular RAG MCP Server简介：一个可插拔、可观测的模块化 RAG（检索增强生成）服务框架，通过 MCP（Model Context Protocol） 协议对外暴露工具接口，可被 Claude Desktop &#x2F; GitHub Copilot 等 AI 助手直接调用。 技术栈：Python 3.10+ · Chro">
 <meta property="og:type" content="website">
 <meta property="og:title" content="作品">
 <meta property="og:url" content="https://txswde.github.io/works/index.html">
 <meta property="og:site_name" content="无忧无虑">
-<meta property="og:description" content="一些做过的小项目，记录自己的成长。      📚 RAG 智能问答系统简介：基于检索增强生成（RAG）的本地知识库问答系统，把私有文档转成向量索引，再用大模型自然语言作答。 技术栈：Python · LangChain · FAISS · OpenAI API 核心功能  📄 支持 PDF &#x2F; Markdown &#x2F; TXT 等多格式文档解析 🔍 基于向量相似度的语义检索">
+<meta property="og:description" content="一些做过的小项目，记录自己的成长。      🧩 Modular RAG MCP Server简介：一个可插拔、可观测的模块化 RAG（检索增强生成）服务框架，通过 MCP（Model Context Protocol） 协议对外暴露工具接口，可被 Claude Desktop &#x2F; GitHub Copilot 等 AI 助手直接调用。 技术栈：Python 3.10+ · Chro">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-05-19T12:01:36.000Z">
-<meta property="article:modified_time" content="2026-05-19T12:03:19.088Z">
+<meta property="article:modified_time" content="2026-05-19T12:21:08.296Z">
 <meta property="article:author" content="wjx">
 <meta property="article:tag" content="随笔,日记,生活">
 <meta name="twitter:card" content="summary">
@@ -160,7 +160,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%93%9A-RAG-%E6%99%BA%E8%83%BD%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">📚 RAG 智能问答系统</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%A7%A9-Modular-RAG-MCP-Server"><span class="nav-number">1.</span> <span class="nav-text">🧩 Modular RAG MCP Server</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -229,17 +229,21 @@
 
 <div class="project-card">
 
-<h3 id="📚-RAG-智能问答系统"><a href="#📚-RAG-智能问答系统" class="headerlink" title="📚 RAG 智能问答系统"></a>📚 RAG 智能问答系统</h3><p><strong>简介</strong>：基于检索增强生成（RAG）的本地知识库问答系统，把私有文档转成向量索引，再用大模型自然语言作答。</p>
-<p><strong>技术栈</strong>：<code>Python</code> · <code>LangChain</code> · <code>FAISS</code> · <code>OpenAI API</code></p>
-<p><strong>核心功能</strong></p>
+<h3 id="🧩-Modular-RAG-MCP-Server"><a href="#🧩-Modular-RAG-MCP-Server" class="headerlink" title="🧩 Modular RAG MCP Server"></a>🧩 Modular RAG MCP Server</h3><p><strong>简介</strong>：一个<strong>可插拔、可观测</strong>的模块化 RAG（检索增强生成）服务框架，通过 <strong>MCP（Model Context Protocol）</strong> 协议对外暴露工具接口，可被 Claude Desktop &#x2F; GitHub Copilot 等 AI 助手直接调用。</p>
+<p><strong>技术栈</strong>：<code>Python 3.10+</code> · <code>ChromaDB</code> · <code>LangChain</code> · <code>MCP</code> · <code>Jieba</code> · <code>Streamlit</code> · <code>Ragas</code></p>
+<p><strong>核心能力</strong></p>
 <ul>
-<li>📄 支持 PDF &#x2F; Markdown &#x2F; TXT 等多格式文档解析</li>
-<li>🔍 基于向量相似度的语义检索</li>
-<li>💬 上下文感知的多轮对话</li>
-<li>🎯 引用溯源，回答可追溯到原文段落</li>
+<li>🔌 <strong>全链路可插拔架构</strong>：LLM &#x2F; Embedding &#x2F; Reranker &#x2F; Splitter &#x2F; VectorStore &#x2F; Evaluator 全部抽象接口化，配置文件一键切换后端</li>
+<li>🔍 <strong>混合检索 + 重排</strong>：BM25 稀疏检索 + Dense Embedding 向量检索，RRF 融合后接 Cross-Encoder &#x2F; LLM 精排</li>
+<li>🖼️ <strong>多模态图像处理</strong>：Vision LLM 自动生成图片描述并缝合进 Chunk，复用纯文本 RAG 链路实现”搜文字出图”</li>
+<li>📡 <strong>MCP 生态集成</strong>：标准协议直接对接 Claude Desktop &#x2F; Copilot 等客户端，零前端开发</li>
+<li>📊 <strong>Streamlit 六页面 Dashboard</strong>：系统总览 &#x2F; 数据浏览 &#x2F; Ingestion 管理 &#x2F; 链路追踪 &#x2F; 评估面板</li>
+<li>🧪 <strong>三层测试体系</strong>：Unit &#x2F; Integration &#x2F; E2E 全覆盖</li>
+<li>🤖 <strong>Skill 驱动全流程</strong>：auto-coder &#x2F; qa-tester &#x2F; package &#x2F; setup 等 Agent Skill 覆盖完整开发生命周期</li>
 </ul>
-<p><strong>项目亮点</strong>：在 XX 数据集上检索准确率达 X%，平均响应时间 &lt; X 秒。</p>
-<p>🔗 <a target="_blank" rel="noopener" href="https://github.com/txswde/rag-demo">GitHub 源码</a> · 📖 <a href="#">项目笔记</a></p>
+<p><strong>项目亮点</strong></p>
+<p>工程化思路 &gt; 项目本身：用 <strong>DEV_SPEC</strong> 驱动开发，让 AI 基于 Spec 自动完成代码，从测试、打包、配置到部署一键搞定。</p>
+<p>🔗 <a target="_blank" rel="noopener" href="https://github.com/txswde/MODULAR-RAG-MCP-SERVER">GitHub 源码</a> · 📖 <a href="#">项目笔记</a></p>
 </div>
 
 <!-- 复制下面整段就能加新项目 -->
